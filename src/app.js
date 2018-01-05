@@ -1,4 +1,5 @@
 var musicVolume;
+var version;
 var HelloWorldLayer = cc.Layer.extend({
     sprite:null,
     ctor:function () {
@@ -20,9 +21,12 @@ var HelloWorldLayer = cc.Layer.extend({
         this.addChild(title);
         
         musicVolume=0.5;
-
-        var menuItem1 = new cc.MenuItemFont("Start a New game", play);
-        var menu = new cc.Menu(menuItem1);
+        version = "Arcade";
+        var menuItem1 = new cc.MenuItemFont("Start a New Arcade Game", play);
+        var menuItem2 = new cc.MenuItemFont("Start a New Lightening Game", light);
+        menuItem1.setPosition(cc.p(size.width/2, size.height/2-100));
+        menuItem2.setPosition(cc.p(size.width/2, size.height/2-200));
+        var menu = new cc.Menu(menuItem1,menuItem2);
         menu.alignItemsVertically();
         menu.setPosition(cc.p(size.width/2, size.height/2-100));
         this.addChild(menu);
@@ -31,7 +35,7 @@ var HelloWorldLayer = cc.Layer.extend({
 
         var volume = new cc.LabelTTF("Adjust Volume by Up and Down Keys", "Arial");
         volume.setFontSize(30);
-        volume.setPosition(cc.p(size.width/2, size.height/2-200));
+        volume.setPosition(cc.p(size.width/2, size.height/2-300));
         volume.setColor(cc.color(255,178,102));
         this.addChild(volume);
 
@@ -62,6 +66,12 @@ var HelloWorldLayer = cc.Layer.extend({
 });
 
 var play = function(){
+    cc.audioEngine.stopAllEffects();
+    var scene = new HelloWorldScene2();
+    cc.director.runScene(new cc.TransitionFade(2,(scene)));
+};
+var light = function(){
+	version = "Light";
     cc.audioEngine.stopAllEffects();
     var scene = new HelloWorldScene2();
     cc.director.runScene(new cc.TransitionFade(2,(scene)));
