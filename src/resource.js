@@ -19,7 +19,8 @@ var res = {
     PlayAgain_jpg: folder + "playAgain.jpg",
     playAgainSelected_png: folder + "playAgainSelected.png",
     plusOne_png : folder + "plusOne.png",
-    File_txt : "res/file.txt"
+    light_png : folder + "light.png",
+    thunder_sound : "res/thunder.wav"
 };
 
 var g_resources = [];
