@@ -38,7 +38,7 @@ var HelloWorldLayer2 = cc.Layer.extend({
         this.addChild(spritebg,0);
 
         for(k=0;k<7;k++){
-            cc.log("inside for");
+            //cc.log("inside for");
             sprite[k] = new cc.Sprite.create(res.Block_png);
             sprite[k].setAnchorPoint(cc.p(0,1));
             sprite[k].setPosition(cc.p(size.width/2,size.height/4+size.height));
@@ -102,11 +102,13 @@ var HelloWorldLayer2 = cc.Layer.extend({
                         musicVolume = musicVolume+0.1;
                         if(musicVolume>1) musicVolume=1;
                         cc.audioEngine.setEffectsVolume(musicVolume);
+                        scope.schedule(scope.check, 1);
                     }
                     else if(key.toString()== "40"){
                         musicVolume = musicVolume-0.1;
                         if(musicVolume<0) musicVolume=0;
                         cc.audioEngine.setEffectsVolume(musicVolume);
+                        scope.unschedule(scope.check);
                     }
                 }
             },this);
@@ -135,7 +137,7 @@ var HelloWorldLayer2 = cc.Layer.extend({
                                     sprite[k].setOpacity(128);
                                     cc.audioEngine.playEffect(res.Piano_sound);
                                     isClicked[k]=true;
-                                    
+                                    count++;
                                 }
                                 clickOnTile=true;
                             }
@@ -147,17 +149,36 @@ var HelloWorldLayer2 = cc.Layer.extend({
                                 highScore = score;
                             }
                             cc.audioEngine.stopAllEffects();
-                            cc.director.runScene(new cc.TransitionFade(2,(new EndScene())));
+                            cc.director.runScene(new cc.TransitionFade(0.5,(new EndScene())));
                         }
                     }
                     ScoreLabel.setString("SCORE: " + score);
+                    if(count%10==0){
+                    	scheduleTime=scheduleTime-0.08;
+                    	speed = speed - 0.03;
+                    	scope.unschedule(scope.createSprite);
+                    	scope.schedule(scope.createSprite,scheduleTime);
+                    }
                 }
             },this);
         }
         
         this.schedule(this.createSprite, scheduleTime);
-        this.schedule(this.checkClicked, 0.05);       
+        this.schedule(this.checkClicked, 0.05);  
+        if(version=="Light"){
+        	scope.schedule(scope.lightCreation, 8);
+        }     
         return true;
+    },
+
+    lightCreation: function(dt){
+    	var light = new cc.Sprite.create(res.light_png);
+        light.setAnchorPoint(cc.p(0.5,0.5));
+        light.setPosition(cc.p(size.width/2,size.height/2));
+        light.setTag(27);
+        scope.addChild(light,0);
+        cc.audioEngine.playEffect(res.thunder_sound);
+        light.runAction(cc.FadeOut.create(0.5));
     },
 
     checkClicked: function(dt){
@@ -169,13 +190,17 @@ var HelloWorldLayer2 = cc.Layer.extend({
                     cc.sys.localStorage.setItem("Score", score);
                     highScore = score;
                 }
-                cc.director.runScene(new cc.TransitionFade(2,(new EndScene())));
+                cc.director.runScene(new cc.TransitionFade(0.5,(new EndScene())));
             }
         }
     },
 
+    check: function(dt){
+    	cc.log("scheduled inside");
+    },
+
     createSprite: function(dt){
-        console.log(dt);
+        //console.log(dt);
         num = Math.random();
         size = cc.winSize;
         sprite[i].setOpacity(255);
