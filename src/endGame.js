@@ -31,7 +31,7 @@ var EndLayer = cc.Layer.extend({
         this.addChild(HighScoreLabel);
 
         var menuItem1 = new cc.MenuItemImage(res.PlayAgain_jpg, res.playAgainSelected_png, function(){
-                                                cc.director.runScene(new cc.TransitionFade(1,new HelloWorldScene2()));
+                                                cc.director.runScene(new cc.TransitionFade(2,new HelloWorldScene()));
         });
         var menu = new cc.Menu(menuItem1);
         menu.alignItemsVertically();
